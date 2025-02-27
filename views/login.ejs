@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Tailwind CSS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Welcome Back</h2>
+        <form onsubmit="login(event)">
+            <div class="mb-4">
+                <label for="email" class="block text-sm font-semibold text-gray-600">Email</label>
+                <input id="login-username" name="email" required
+                    class="w-full p-3 mt-1 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400">
+            </div>
+
+            <div class="mb-4">
+                <label for="password" class="block text-sm font-semibold text-gray-600">Password</label>
+                <input type="password" id="login-password" name="password" required
+                    class="w-full p-3 mt-1 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400">
+            </div>
+
+            <button type="submit"
+                class="w-full bg-gray-800 hover:bg-gray-900 text-white font-semibold py-3 rounded-lg transition duration-300">
+                Login
+            </button>
+        </form>
+
+        <p class="text-center text-sm mt-6 text-gray-600">
+            Don't have an account? <a href="/signup" class="text-gray-800 hover:text-gray-900 font-semibold">Sign up</a>
+        </p>
+    </div>
+</body>
+<script>
+    function login(e) {
+        e.preventDefault();
+        const email = document.getElementById("login-username").value;
+        const password = document.getElementById("login-password").value;
+
+        fetch(`/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.token) {
+                    localStorage.setItem("token", data.token);
+                    localStorage.setItem("username", data.username);
+                    window.location.href = "/chat";
+                } else {
+                    alert("Invalid credentials");
+                }
+            });
+    }
+</script>
+</html>
